@@ -1,14 +1,22 @@
-// src/Pages/Login.jsx
 import React, { useState } from "react";
+import { loginUser } from "../services/api";
 
-const Login = ({ onLogin }) => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Mock login function
-    onLogin({ email, password });
+
+    try {
+      await loginUser({ email, password });
+      setErrorMessage(""); // Clear error message on successful login
+      alert("Login successful!"); // Replace with navigation to dashboard
+      window.location.href = "/dashboard";
+    } catch (error) {
+      setErrorMessage(error.response?.data?.message || "Login failed.");
+    }
   };
 
   return (
@@ -17,6 +25,11 @@ const Login = ({ onLogin }) => {
         <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
           Login
         </h1>
+        {errorMessage && (
+          <div className="bg-red-100 text-red-600 p-3 rounded-md mb-4">
+            {errorMessage}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-gray-600 mb-1">
