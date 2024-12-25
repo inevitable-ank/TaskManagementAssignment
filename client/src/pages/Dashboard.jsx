@@ -1,70 +1,91 @@
-// src/Pages/Dashboard.jsx
 import React, { useState, useEffect } from "react";
 import PriorityBoard from "../components/PriorityBoard";
 import TaskList from "../components/TaskList";
 import TaskDetails from "../components/TaskDetails";
 import TaskForm from "../components/TaskForm";
+import { getTasks, createTask, updateTask, deleteTask } from "../services/api";
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const tasksPerPage = 5; // Adjust per requirements
-  const totalPages = Math.ceil(tasks.length / tasksPerPage);
+  const tasksPerPage = 5;
+
+  // Fetch tasks from backend
+  const fetchTasks = async (page = 1) => {
+    try {
+      const data = await getTasks(page, tasksPerPage);
+      setTasks(data.tasks);
+      setCurrentPage(data.currentPage);
+      setTotalPages(data.totalPages);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  };
 
   useEffect(() => {
-    // Mock API call to fetch tasks
-    setTasks([
-      {
-        id: 1,
-        title: "Task 1",
-        description: "Description for Task 1",
-        dueDate: "2024-12-30",
-        status: "pending",
-        priority: "High",
-      },
-      // Add more sample tasks...
-    ]);
+    fetchTasks();
   }, []);
 
   const handleTaskClick = (task) => {
     setSelectedTask(task);
   };
 
-  const handleTaskSave = (task) => {
-    if (task.id) {
-      // Edit existing task
-      setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
-    } else {
-      // Add new task
-      setTasks([...tasks, { ...task, id: Date.now() }]);
+  const handleTaskSave = async (task) => {
+    try {
+      if (task.id) {
+        await updateTask(task.id, task);
+      } else {
+        await createTask({ ...task, priority: task.priority.toLowerCase() });
+      }
+      fetchTasks(currentPage);
+      setIsFormVisible(false);
+      setSelectedTask(null);
+    } catch (error) {
+      console.error("Error saving task:", error.response?.data || error.message);
     }
-    setIsFormVisible(false);
   };
 
-  const handleTaskDelete = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
-    setSelectedTask(null);
+  const handleTaskDelete = async (id) => {
+    try {
+      console.log("Deleting Task ID:", id);  
+      await deleteTask(id); // Ensure `id` is passed correctly
+      fetchTasks(currentPage);
+      setSelectedTask(null);
+    } catch (error) {
+      console.error("Error deleting task:", error.message || error);
+      alert("Failed to delete the task. Please try again.");
+    }
   };
 
-  const handleTaskStatusChange = (id, status) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, status } : task
-      )
-    );
+  const handleTaskStatusChange = async (id, status) => {
+    try {
+      await updateTask(id, { status }); // Ensure `id` and `status` are correct
+      fetchTasks(currentPage);
+    } catch (error) {
+      console.error("Error updating task status:", error.message || error);
+      alert("Failed to update task status. Please try again.");
+    }
+  };
+  
+
+  const handleDragEnd = async (taskId, newPriority) => {
+    try {
+      if (!taskId) throw new Error("Task ID is not available");
+
+      await updateTask(taskId, { priority: newPriority });
+      fetchTasks(currentPage);
+    } catch (error) {
+      console.error("Error updating task priority:", error);
+    }
   };
 
   const handlePageChange = (page) => {
-    setCurrentPage(page);
+    fetchTasks(page);
   };
-
-  const paginatedTasks = tasks.slice(
-    (currentPage - 1) * tasksPerPage,
-    currentPage * tasksPerPage
-  );
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -74,7 +95,10 @@ const Dashboard = () => {
 
       <main className="p-6">
         <button
-          onClick={() => setIsFormVisible(true)}
+          onClick={() => {
+            setIsFormVisible(true);
+            setSelectedTask(null);
+          }}
           className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition mb-6"
         >
           Create Task
@@ -83,18 +107,12 @@ const Dashboard = () => {
         <PriorityBoard
           tasks={tasks}
           onTaskClick={handleTaskClick}
-          onDragEnd={(e, priority) => {
-            const taskId = e.dataTransfer.getData("taskId");
-            const updatedTasks = tasks.map((task) =>
-              task.id === parseInt(taskId) ? { ...task, priority } : task
-            );
-            setTasks(updatedTasks);
-          }}
+          onDragEnd={handleDragEnd}
         />
 
         <h2 className="text-xl font-bold mt-8 mb-4">Task List</h2>
         <TaskList
-          tasks={paginatedTasks}
+          tasks={tasks}
           onTaskClick={handleTaskClick}
           onPageChange={handlePageChange}
           currentPage={currentPage}
@@ -106,9 +124,9 @@ const Dashboard = () => {
         <TaskDetails
           task={selectedTask}
           onClose={() => setSelectedTask(null)}
-          onEdit={(task) => {
-            setSelectedTask(null);
+          onEdit={() => {
             setIsFormVisible(true);
+            setSelectedTask(selectedTask);
           }}
           onDelete={handleTaskDelete}
           onStatusChange={handleTaskStatusChange}

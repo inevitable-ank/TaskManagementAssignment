@@ -21,6 +21,7 @@ const authMiddleware = async (req, res, next) => {
 
       next();
     } catch (error) {
+      console.error("Authentication error:", error.message);
       res.status(401).json({ message: "Unauthorized, token failed" });
     }
   } else {

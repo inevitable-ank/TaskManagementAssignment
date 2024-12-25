@@ -16,13 +16,13 @@ import axios from "axios";
 
 // Base configuration for Axios
 const API = axios.create({
-  baseURL: "http://localhost:5000/api", // Replace with your API URL
+  baseURL: "http://localhost:5000/api", // Update with backend URL if needed
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Add Authorization token to headers if available
+// Add Authorization token to headers
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem("authToken");
   if (token) {
@@ -31,11 +31,11 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
-// User Authentication APIs
+// Authentication APIs
 export const loginUser = async (credentials) => {
   const response = await API.post("/auth/login", credentials);
   if (response.data.token) {
-    localStorage.setItem("authToken", response.data.token);
+    localStorage.setItem("authToken", response.data.token); // Save token
   }
   return response.data;
 };
@@ -45,13 +45,9 @@ export const registerUser = async (userData) => {
   return response.data;
 };
 
-export const logoutUser = () => {
-  localStorage.removeItem("authToken");
-};
-
-// Task Management APIs
-export const getTasks = async () => {
-  const response = await API.get("/tasks");
+// Task APIs
+export const getTasks = async (page = 1, limit = 5) => {
+  const response = await API.get(`/tasks?page=${page}&limit=${limit}`);
   return response.data;
 };
 
@@ -66,25 +62,11 @@ export const updateTask = async (taskId, updatedData) => {
 };
 
 export const deleteTask = async (taskId) => {
+  console.log("API Delete Task ID:", taskId);  
   const response = await API.delete(`/tasks/${taskId}`);
-  return response.data;
-};
-
-export const updateTaskStatus = async (taskId, status) => {
-  const response = await API.patch(`/tasks/${taskId}/status`, { status });
-  return response.data;
-};
-
-// Priority Management APIs
-export const moveTaskToPriority = async (taskId, priority) => {
-  const response = await API.patch(`/tasks/${taskId}/priority`, { priority });
-  return response.data;
-};
-
-// Fetch Task Details
-export const getTaskDetails = async (taskId) => {
-  const response = await API.get(`/tasks/${taskId}`);
+  console.log(response.data)
   return response.data;
 };
 
 export default API;
+

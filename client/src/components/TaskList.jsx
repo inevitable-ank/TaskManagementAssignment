@@ -1,5 +1,5 @@
 // src/Components/TaskList.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 const TaskList = ({ tasks, onTaskClick, onPageChange, currentPage, totalPages }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -8,6 +8,7 @@ const TaskList = ({ tasks, onTaskClick, onPageChange, currentPage, totalPages })
     setSearchTerm(e.target.value);
   };
 
+  // Filter tasks based on search term
   const filteredTasks = tasks.filter((task) =>
     task.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -30,7 +31,7 @@ const TaskList = ({ tasks, onTaskClick, onPageChange, currentPage, totalPages })
       <div className="space-y-4">
         {filteredTasks.map((task) => (
           <div
-            key={task.id}
+            key={task.id || task.title} // Use `task.id` or fallback to a unique property like `task.title`
             className="bg-white p-4 rounded-lg shadow-md border hover:shadow-lg cursor-pointer transition-transform transform hover:scale-105"
             onClick={() => onTaskClick(task)}
           >

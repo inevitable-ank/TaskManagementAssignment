@@ -41,7 +41,10 @@ const TaskDetails = ({ task, onClose, onEdit, onDelete, onStatusChange }) => {
           <strong className="text-gray-600 mr-3">Status:</strong>
           <select
             value={status}
-            onChange={(e) => onStatusChange(task.id, e.target.value)}
+            onChange={(e) => {
+            const newStatus = e.target.value;
+            onStatusChange(task._id || task.id, newStatus); // Use `_id` or `id`
+            }}
             className="border border-gray-300 rounded-md px-3 py-1 focus:ring focus:ring-blue-300 transition"
           >
             <option value="pending">Pending</option>
@@ -58,7 +61,11 @@ const TaskDetails = ({ task, onClose, onEdit, onDelete, onStatusChange }) => {
             Edit
           </button>
           <button
-            onClick={() => onDelete(task.id)}
+            onClick={() => {
+              if (window.confirm("Are you sure you want to delete this task?")) {
+              onDelete(task._id || task.id); // Use `_id` or `id` based on backend response
+              }
+            }}
             className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
           >
             Delete

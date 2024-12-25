@@ -2,24 +2,25 @@
 import React, { useState } from "react";
 
 const TaskForm = ({ initialTask = {}, onSave, onCancel }) => {
-  const [title, setTitle] = useState(initialTask.title || "");
-  const [description, setDescription] = useState(initialTask.description || "");
+  const [title, setTitle] = useState(initialTask?.title || ""); // Safely access title
+  const [description, setDescription] = useState(initialTask?.description || "");
   const [dueDate, setDueDate] = useState(
-    initialTask.dueDate
+    initialTask?.dueDate
       ? new Date(initialTask.dueDate).toISOString().split("T")[0]
       : ""
   );
-  const [priority, setPriority] = useState(initialTask.priority || "Medium");
+  const [priority, setPriority] = useState(initialTask?.priority || "medium");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const taskData = {
-      ...initialTask,
+      ...initialTask, // Include existing data if editing
       title,
       description,
       dueDate,
       priority,
     };
+    console.log("Submitting Task:", taskData); 
     onSave(taskData);
   };
 
@@ -31,7 +32,7 @@ const TaskForm = ({ initialTask = {}, onSave, onCancel }) => {
       >
         {/* Form Header */}
         <h2 className="text-2xl font-bold text-gray-800 mb-6">
-          {initialTask.id ? "Edit Task" : "Create Task"}
+          {initialTask?.id ? "Edit Task" : "Create Task"}
         </h2>
 
         {/* Task Title */}
@@ -103,9 +104,9 @@ const TaskForm = ({ initialTask = {}, onSave, onCancel }) => {
             className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring focus:ring-blue-300 transition"
             required
           >
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
           </select>
         </div>
 

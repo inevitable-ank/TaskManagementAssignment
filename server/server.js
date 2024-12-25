@@ -5,7 +5,8 @@ const colors = require("colors");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const taskRoutes = require("./routes/taskRoutes");
-const errorMiddleware = require("./middleware/errorMiddleware"); // Optional for global error handling
+const errorMiddleware = require("./middleware/errorMiddleware"); 
+const cors = require("cors");
 
 // Load environment variables
 dotenv.config();
@@ -13,11 +14,13 @@ dotenv.config();
 // Initialize the app
 const app = express();
 
+
 // Connect to MongoDB
 connectDB();
 
 // Middleware
-app.use(express.json()); // Parse JSON bodies
+app.use(express.json()); 
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
 // API Routes
 app.use("/api/auth", authRoutes);
