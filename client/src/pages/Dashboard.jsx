@@ -63,7 +63,7 @@ const Dashboard = () => {
 
   const handleTaskStatusChange = async (id, status) => {
     try {
-      await updateTask(id, { status }); // Ensure `id` and `status` are correct
+      await updateTask(id, { status }); 
       fetchTasks(currentPage);
     } catch (error) {
       console.error("Error updating task status:", error.message || error);

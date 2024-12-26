@@ -10,7 +10,7 @@ const App = () => {
   // Check for token on component mount
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    setIsAuthenticated(!!token); // Set authenticated if token exists
+    setIsAuthenticated(!!token); 
   }, []);
 
   const handleLogin = () => {
@@ -18,7 +18,7 @@ const App = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken"); // Clear token from storage
+    localStorage.removeItem("authToken"); 
     setIsAuthenticated(false);
   };
 

@@ -17,16 +17,19 @@ A full-stack task management system that allows users to create, edit, delete, a
 ## Screenshots
 
 ### Login Page
-![Login Page](screenshots/login_page.png)
+![Login Page](./Screenshots/Login.png)
 
 ### Register Page
-![Register Page](screenshots/register_page.png)
+![Register Page](./Screenshots/Register.png)
 
 ### Dashboard - Task List
-![Dashboard Task List](screenshots/dashboard_task_list.png)
+![Dashboard Task List](./Screenshots/Dashboard.png)
+
+### Dashboard 2 - Task List
+![Dashboard Task List](./Screenshots/Dashboard%202.png)
 
 ### Task Details Modal
-![Task Details Modal](screenshots/task_details_modal.png)
+![Task Details Modal](screenshots/Modal.png)
 
 ---
 

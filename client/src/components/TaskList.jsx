@@ -31,7 +31,7 @@ const TaskList = ({ tasks, onTaskClick, onPageChange, currentPage, totalPages })
       <div className="space-y-4">
         {filteredTasks.map((task) => (
           <div
-            key={task.id || task.title} // Use `task.id` or fallback to a unique property like `task.title`
+            key={task.id || task.title} 
             className="bg-white p-4 rounded-lg shadow-md border hover:shadow-lg cursor-pointer transition-transform transform hover:scale-105"
             onClick={() => onTaskClick(task)}
           >

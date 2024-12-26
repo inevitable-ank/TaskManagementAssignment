@@ -16,7 +16,7 @@ import axios from "axios";
 
 // Base configuration for Axios
 const API = axios.create({
-  baseURL: "http://localhost:5000/api", // Update with backend URL if needed
+  baseURL: "http://localhost:5000/api", 
   headers: {
     "Content-Type": "application/json",
   },
@@ -35,7 +35,7 @@ API.interceptors.request.use((config) => {
 export const loginUser = async (credentials) => {
   const response = await API.post("/auth/login", credentials);
   if (response.data.token) {
-    localStorage.setItem("authToken", response.data.token); // Save token
+    localStorage.setItem("authToken", response.data.token); 
   }
   return response.data;
 };

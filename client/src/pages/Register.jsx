@@ -19,10 +19,10 @@ const Register = () => {
     try {
       const response = await registerUser({ name, email, password });
       setSuccessMessage("Registration successful! Please log in.");
-      setErrorMessage(""); // Clear error message on successful submission
+      setErrorMessage(""); 
     } catch (error) {
       setErrorMessage(error.response?.data?.message || "Registration failed.");
-      setSuccessMessage(""); // Clear success message on error
+      setSuccessMessage(""); 
     }
   };
 

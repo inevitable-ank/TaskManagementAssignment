@@ -15,7 +15,7 @@ const Login = ({ onLogin }) => {
         await loginUser({ email, password });
         setErrorMessage("");
         alert("Login successful!");
-        onLogin(); // Notify App component of successful login
+        onLogin(); 
         navigate("/dashboard");
       } catch (error) {
         setErrorMessage(error.response?.data?.message || "Login failed.");

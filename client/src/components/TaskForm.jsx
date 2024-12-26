@@ -14,7 +14,7 @@ const TaskForm = ({ initialTask = {}, onSave, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const taskData = {
-      ...initialTask, // Include existing data if editing
+      ...initialTask, 
       title,
       description,
       dueDate,

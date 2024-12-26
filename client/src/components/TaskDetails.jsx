@@ -63,7 +63,7 @@ const TaskDetails = ({ task, onClose, onEdit, onDelete, onStatusChange }) => {
           <button
             onClick={() => {
               if (window.confirm("Are you sure you want to delete this task?")) {
-              onDelete(task._id || task.id); // Use `_id` or `id` based on backend response
+              onDelete(task._id || task.id);
               }
             }}
             className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
